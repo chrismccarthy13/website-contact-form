@@ -1,104 +1,192 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
+import React, { Component } from 'react';
+import MuiButton from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
+import MuiLink from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import { withStyles } from '@material-ui/core/styles';
+import styled from "styled-components";
+import MuiContainer from '@material-ui/core/Container';
 
-const useStyles = makeStyles(theme => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
+const CssTextField = withStyles({
+  root: {
+    '& label.Mui-focused': {
+      color: 'black',
+    },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: 'grey',
+      },
+      '&:hover fieldset': {
+        borderColor: '#53A8CB',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: '#698E9C',
+      },
     },
   },
-  paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: '100%',
-    marginTop: theme.spacing(3),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
+})(TextField);
 
-export default function SignUp() {
-  const classes = useStyles();
+const GridWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+`;
 
-  return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Typography component="h1" variant="h5">
-          Chris McCarthy's Contact Form
-        </Typography>
-        <form className={classes.form} noValidate>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                autoComplete="fname"
-                name="firstName"
-                variant="outlined"
-                required
-                fullWidth
-                id="firstName"
-                label="First Name"
-                autoFocus
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                id="message-box"
-                name="message"
-                label="Message"
-                helperText="Some important text"
-                variant="outlined"
+const Container = styled(MuiContainer)`
+  display: inline-block;
+  position: relative;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 1px 1px 5px 0px rgba(0,0,0,.15);
+  padding: 20px 30px;
+  min-width: 500px;
+  text-align: center;
+  box-sizing: border-box;
+  margin-top: 100px;
+`;
 
-                fullWidth
-                required
-              />
+const Link = styled(MuiLink)`
+  color: #3790B4 !important;
+`;
+
+const Button = styled(MuiButton)`
+  && {
+    text-transform: unset;
+    background-color: #3790B4 !important;
+    margin-top: 30px;
+    margin-bottom: 20px;
+  }
+
+  &&:disabled {
+    cursor: not-allowed;
+    background-color: #3790B4 !important;
+    opacity: 0.5;
+  }
+`;
+
+export default class SignUp extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      errorMessage: '',
+      email: '',
+      name:'',
+      message:'',
+      emailValid: false,
+      nameValid: false,
+      messageValid: false,
+    };
+  }
+
+  validateName = (nameInput) => {
+    let name = nameInput;
+
+    this.setState({
+      name,
+    })
+  }
+
+  validateEmail = (emailInput) => {
+    let email = emailInput;
+
+    this.setState({ email })
+  }
+
+  validateMessage = (messageInput) => {
+    let message = messageInput;
+
+    this.setState({ message })
+  }
+
+  handleUserName = (event) => this.validateName(event.target.value);
+  handleUserEmail = (event) => this.validateEmail(event.target.value);
+  handleUserMessage = (event) => this.validateMessage(event.target.value);
+
+  render() {
+    const {
+      errorMessage,
+      email,
+      name,
+      message,
+      emailValid,
+      nameValid,
+      messageValid,
+    } = this.state;
+
+    return (
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+          <Typography component="h1" variant="h5">
+            Chris McCarthy's Contact Form
+          </Typography>
+
+          <GridWrapper>
+            <Grid container spacing={2}>
+              <Grid item xs={12} className='grid-input'>
+                <CssTextField
+                  id="name"
+                  name="name"
+                  label="Name"
+                  autoComplete="name"
+                  variant="outlined"
+                  value={name}
+                  required={true}
+                  onChange={this.handleUserName}
+                  fullWidth
+                  autoFocus
+                />
+              </Grid>
+              <Grid item xs={12} className='grid-input'>
+                <CssTextField
+                  id="email"
+                  name="email"
+                  label="Email Address"
+                  type="email"
+                  autoComplete="email"
+                  variant="outlined"
+                  value={email}
+                  required={true}
+                  onChange={this.handleUserEmail}
+                  fullWidth
+                >
+                {email}
+                </CssTextField>
+              </Grid>
+              <Grid item xs={12} className='grid-input'>
+                <CssTextField
+                  id="message-box"
+                  name="message"
+                  label="Message"
+                  variant="outlined"
+                  rows="4"
+                  value={message}
+                  required={true}
+                  onChange={this.handleUserMessage}
+                  multiline
+                  fullWidth
+                />
+              </Grid>
             </Grid>
-          </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Submit
-          </Button>
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Link href="#" variant="body2">
-                Already have an account? Sign in
-              </Link>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+            >
+              Submit
+            </Button>
+            <Grid container justify="flex-end">
+              <Grid item>
+                <Link href="#" variant="body2">
+                  Log Out
+                </Link>
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
-      </div>
-    </Container>
-  );
+          </GridWrapper>
+      </Container>
+    );
+  }
 }
