@@ -1,13 +1,9 @@
 import React, { Component } from 'react';
+import { TextField, Grid, Typography, withStyles } from '@material-ui/core';
 import MuiButton from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
 import MuiLink from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import { withStyles } from '@material-ui/core/styles';
-import styled from "styled-components";
 import MuiContainer from '@material-ui/core/Container';
+import styled from "styled-components";
 
 const CssTextField = withStyles({
   root: {
@@ -71,54 +67,39 @@ export default class SignUp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      errorMessage: '',
       email: '',
       name:'',
       message:'',
-      emailValid: false,
-      nameValid: false,
-      messageValid: false,
+      emailValid: '',
+      formIncomplete: true,
     };
   }
 
-  validateName = (nameInput) => {
-    let name = nameInput;
+//Function to verify valid email and enables sumbit button
+  validateEmail = (emailInput) => {
+    let email = emailInput
+    const emailValid = emailInput.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+    const formIncomplete = (emailValid ) ? false : true;
 
     this.setState({
-      name,
+      email,
+      emailValid,
+      formIncomplete,
     })
   }
 
-  validateEmail = (emailInput) => {
-    let email = emailInput;
-
-    this.setState({ email })
-  }
-
-  validateMessage = (messageInput) => {
-    let message = messageInput;
-
-    this.setState({ message })
-  }
-
-  handleUserName = (event) => this.validateName(event.target.value);
   handleUserEmail = (event) => this.validateEmail(event.target.value);
-  handleUserMessage = (event) => this.validateMessage(event.target.value);
 
   render() {
     const {
-      errorMessage,
       email,
       name,
       message,
-      emailValid,
-      nameValid,
-      messageValid,
+      formIncomplete,
     } = this.state;
 
     return (
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
           <Typography component="h1" variant="h5">
             Chris McCarthy's Contact Form
           </Typography>
@@ -128,13 +109,12 @@ export default class SignUp extends Component {
               <Grid item xs={12} className='grid-input'>
                 <CssTextField
                   id="name"
-                  name="name"
                   label="Name"
                   autoComplete="name"
                   variant="outlined"
-                  value={name}
                   required={true}
-                  onChange={this.handleUserName}
+                  value={name}
+                  onChange={e => this.setState({ name: e.target.value })}
                   fullWidth
                   autoFocus
                 />
@@ -142,29 +122,25 @@ export default class SignUp extends Component {
               <Grid item xs={12} className='grid-input'>
                 <CssTextField
                   id="email"
-                  name="email"
                   label="Email Address"
                   type="email"
                   autoComplete="email"
                   variant="outlined"
-                  value={email}
                   required={true}
+                  value={email}
                   onChange={this.handleUserEmail}
                   fullWidth
-                >
-                {email}
-                </CssTextField>
+                />
               </Grid>
               <Grid item xs={12} className='grid-input'>
                 <CssTextField
-                  id="message-box"
-                  name="message"
+                  id="message"
                   label="Message"
                   variant="outlined"
-                  rows="4"
-                  value={message}
                   required={true}
-                  onChange={this.handleUserMessage}
+                  value={message}
+                  onChange={e => this.setState({ message: e.target.value })}
+                  rows="4"
                   multiline
                   fullWidth
                 />
@@ -174,6 +150,7 @@ export default class SignUp extends Component {
               type="submit"
               variant="contained"
               color="primary"
+              disabled={formIncomplete}
               fullWidth
             >
               Submit
