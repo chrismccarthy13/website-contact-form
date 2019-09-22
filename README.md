@@ -2,7 +2,7 @@
 
 Here is my website contact form I did for a coding challenge.
 
-Link to view live demo:
+Link to view live demo: https://chris-contact-form.s3-us-west-1.amazonaws.com/index.html
 
 # Outline of the coding challenge
 - Build a website contact form.
