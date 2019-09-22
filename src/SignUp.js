@@ -88,6 +88,37 @@ export default class SignUp extends Component {
     })
   }
 
+  handleSubmit = event => {
+    const { email, name, message } = this.state;
+
+    fetch(
+      "https://bfo43lnqpb.execute-api.us-west-2.amazonaws.com/dev/entries",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: email,
+          name: name,
+          message: message
+        })
+      }
+    )
+      .then(res => res.json())
+      .then(json => {
+        console.log("Response: " + json);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    // clear form
+    document.getElementById("contact-form").reset();
+    this.setState({ name: "", email: "", message: "" });
+    event.preventDefault();
+  };
+
   handleUserEmail = (event) => this.validateEmail(event.target.value);
 
   render() {
@@ -157,12 +188,13 @@ export default class SignUp extends Component {
             </Button>
             <Grid container justify="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link to='/signin' variant="body2">
                   Log Out
                 </Link>
               </Grid>
             </Grid>
           </GridWrapper>
+
       </Container>
     );
   }
